@@ -94,7 +94,7 @@ ax.plot(xt, yt, 'o', color = 'green')
 
 inside = False
 i = 0
-while ((abs(xi - xt) > 0.25) or (abs(yi - yt) > 0.25)) and i <= 1000:
+while ((abs(xi - xt) > 0.25) or (abs(yi - yt) > 0.25)) and i <= 2000:
     xi = testerx(xi)
     yi = testery(yi)
     for path in septagon_paths:
