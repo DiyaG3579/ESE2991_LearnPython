@@ -27,14 +27,14 @@ def square(c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, fc, ec):
     square_path = Path(square)
     return patches.PathPatch(square_path, facecolor = fc, edgecolor = ec)
 
-def testerx(xi):
-    upper = max(9.0, xi + 1.0)
-    lower = min(-9.0, xi - 1.0)
+def testerx(xi):    #ASK ABOUT THESE SECTIONS
+    upper = min(9.0, xi + 1.0)
+    lower = max(-9.0, xi - 1.0)
     x = round(random.uniform(lower, upper),3)
     return x
 def testery(yi):
-    uppery = max(9.0, yi + 1.0)
-    lowery = min(-9.0, yi - 1.0)
+    uppery = min(9.0, yi + 1.0)
+    lowery = max(-9.0, yi - 1.0)
     y = round(random.uniform(lowery, uppery),3)
     return y
 
