@@ -28,14 +28,14 @@ def square(c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, fc, ec):
     return patches.PathPatch(square_path, facecolor = fc, edgecolor = ec)
 
 def testerx(xi):    #ASK ABOUT THESE SECTIONS
-    upper = min(9.0, xi + 1.0)
-    lower = max(-9.0, xi - 1.0)
-    x = round(random.uniform(lower, upper),3)
+    #upper = min(9.0, xi + 1.0)
+    #lower = max(-9.0, xi - 1.0)
+    x = round(random.uniform(-9.0, 9.0),3)
     return x
 def testery(yi):
-    uppery = min(9.0, yi + 1.0)
-    lowery = max(-9.0, yi - 1.0)
-    y = round(random.uniform(lowery, uppery),3)
+    #uppery = min(9.0, yi + 1.0)
+    #lowery = max(-9.0, yi - 1.0)
+    y = round(random.uniform(-9.0, 9.0),3)
     return y
 
 def euclidean(x, y, coordinates):
@@ -62,8 +62,24 @@ def line_hits_obstacle(p1, p2, paths, samples=20):
                 return True
     return False
 
+def steer(pEucl, pRand, epsilon):
+    pEucl = num.array(pEucl)
+    pRand = num.array(pRand)
+
+    direction = pRand - pEucl
+    dist = num.linalg.norm(direction)
+
+    if dist == 0:
+        return p_near.tolist()
+
+    direction = direction / dist   # normalize
+
+    p_new = pEucl + epsilon * direction
+
+    return p_new.tolist()
+
 square = square(-9, -9, 9, -9, 9, 9, -9, 9, 'lightblue', 'black')
-septagon_info = [(7, 3, (6, -6)), (7, 1, (-8, 0)), (7, 2, (3, 5)), (7, 1.5, (-1, -1))]
+septagon_info = [(7, 3, (6, -6)), (7, 1, (-8, 0)), (7, 2, (3, 5)), (7, 1.5, (-1, -1)), (7, 2, (-4, 4)), (7, 1.5, (-4, -4.5)), (7, 2, (4, 0)), (3, 0.5, (-4,0))]
 
 septagon_paths = []
 septagon_patches = []
@@ -78,6 +94,7 @@ xi = -7.5
 yi = -7.5
 xt = -1 
 yt = 7
+epsilon = 0.5
 
 coordinates.append([xi,yi])
 
@@ -91,8 +108,10 @@ for septagon in septagon_patches:
 ax.plot(xi, yi, 'o',color = 'red')
 ax.plot(xt, yt, 'o', color = 'green')
 
+#Instead of straight to line, move via epsillon on that line
 
 inside = False
+insideout = False
 i = 0
 while ((abs(xi - xt) > 0.25) or (abs(yi - yt) > 0.25)) and i <= 2000:
     xi = testerx(xi)
@@ -103,16 +122,24 @@ while ((abs(xi - xt) > 0.25) or (abs(yi - yt) > 0.25)) and i <= 2000:
     if inside == False:
         pointc = euclidean(xi, yi, coordinates)
         pointb = [xi, yi]
-        if not line_hits_obstacle(pointb, pointc, septagon_paths):
+        pointa = steer(pointc, pointb, epsilon)
+        for path in septagon_paths:
+            if path.contains_point(pointa, radius = 0.1):
+                insideout = True
+        if not line_hits_obstacle(pointb, pointc, septagon_paths) and insideout == False:
+            xi = pointa[0]
+            yi = pointa[1]
             ax.plot(xi, yi, '.', color = 'black')
-            ax.plot([pointb[0], pointc[0]],[pointb[1], pointc[1]],'-',color='black')
-            ax.plot(xi, yi, '.', color = 'black')
-            coordinates.append([xi,yi])
+            ax.plot([pointa[0], pointc[0]],[pointa[1], pointc[1]],'-',color='black')
+            #ax.plot(xi, yi, '.', color = 'black')
+            coordinates.append([xi, yi])
+        else:
+            insideout = False
     else:
         inside = False
     i=i+1
 
 ax.set_aspect('equal')
-ax.set_title("Enviorment Test 1")
+ax.set_title("Enviorment Test 2")
 
 plt.show()
