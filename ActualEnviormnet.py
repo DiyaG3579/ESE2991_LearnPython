@@ -100,8 +100,8 @@ for n, r, center in septagon_info:
 
 xi = -7.5
 yi = -7.5
-xt = -1 
-yt = 7
+xt = 7
+yt = 2.5
 epsilon = 0.5
 
 coordinates.append([xi,yi])
