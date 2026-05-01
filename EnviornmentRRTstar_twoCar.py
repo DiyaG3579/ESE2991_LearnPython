@@ -241,7 +241,7 @@ while ((abs(xi - xt) > 0.25) or (abs(yi - yt) > 0.25)) and i <= 2000:
         if path.contains_point((xi, yi), radius = 0.1):
             inside = True
     if (xi < -4.0 and yi < 2.0):
-        inside = True
+        inside = True #For the RRT algorithm, calculate the time for each point and then see where the other car would be
     if inside == False:
         pointc = euclidean(xi, yi, coordinates2)
         pointb = [xi, yi]
